@@ -1,0 +1,38 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      org:
+        hibernate:
+          envers:
+            audit_table_suffix: _AUDIT
+            revision_field_name: REVISION_ID
+            revision_type_field_name: REVISION_TYPE
+      hibernate:
+        format_sql: true
+    show-sql: true
+  #         store_data_at_delete: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Jakarta&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
+
+  flyway:
+    user: root
+    password: root
+    url: jdbc:mysql://localhost:3306/test?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Jakarta&useSSL=false&allowPublicKeyRetrieval=true
+    baseline-version: 0.0
+    enabled: true
+    locations: classpath:db/migration
+    table: flyway_schema_history
+    baselineOnMigrate: true
+
+auth:
+  jwt:
+    issuer: "Spring Boot App"
+    audience: "Demo App"
+    ttl-in-seconds: 3600
+    secret: "ej7+D6Hh2r2KBEIuoGz1RGjtXooObzebSSxNm7yu2YSkEKv8aQmC2iYuxXLkKYKgT1210e5ZKMoY4XM0uQnkJkKGA01tBWZK+Pi3zX+nZvVNTJbZwRSOyZ2bm99exCq+z6ER5q5XWes1G9/sG5rp7kK9bL/NdNdU13HAFjJew6NwyxIxFH5VhXWwtgIJy+1KcJ9+3kq6uYNylrPC2U1h0xvR9qQzi1D2m9H8ZA=="
