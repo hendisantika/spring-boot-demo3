@@ -62,4 +62,9 @@ public class SecurityConfig {
     public AuthenticationManager getAuthenticationManager() throws Exception {
         return authenticationManager();
     }
+
+    @Bean
+    public AuthTokenFilter getJWTAuthTokenFilter() throws Exception {
+        return new AuthTokenFilter();
+    }
 }
