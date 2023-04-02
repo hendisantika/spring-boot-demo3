@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.envers.AuditReader;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,5 +35,17 @@ public class CustomerService {
     public Optional<Customer> getCustomerById(Long customerId) {
         log.info("Fetching customer by id: {}", customerId);
         return customerRepository.findById(customerId);
+    }
+
+    @CachePut(key = "#customer.id")
+    public Customer create(Customer customer) {
+        try {
+            log.info("Creating a new customer with emailAddress: {}", customer.getEmailAddress());
+            return customerRepository.save(customer);
+        }catch (DataIntegrityViolationException e){
+            log.error("Customer already exists with emailAddress: {}", customer.getEmailAddress());
+            throw new RuntimeException("Customer already exists with same emailAddress");
+        }
+
     }
 }
