@@ -6,7 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,6 +34,17 @@ public class CustomerController {
             Long customerIdLong = Long.valueOf(customerId);
             Customer customer = customerService.getCustomerById(customerIdLong)
                     .orElseThrow(()->new RuntimeException("Customer does not exists"));
+            return ResponseEntity.ok(customer);
+        }catch(Exception ex) {
+            return handleException(ex);
+        }
+    }
+
+    @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> searchCustomerByEmail(
+            @RequestParam(name = "email") String emailAddress) {
+        try {
+            Optional<Customer> customer = customerService.findByEmail(emailAddress);
             return ResponseEntity.ok(customer);
         }catch(Exception ex) {
             return handleException(ex);
