@@ -1,8 +1,10 @@
 package com.hendisantika.springbootdemo2.customer;
 
+import com.hendisantika.springbootdemo2.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -95,5 +97,11 @@ public class CustomerController {
         }catch(Exception ex) {
             return handleException(ex);
         }
+    }
+
+    private ResponseEntity<ErrorMessage> handleException(Exception ex) {
+        ex.printStackTrace();
+        ErrorMessage error = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
     }
 }
