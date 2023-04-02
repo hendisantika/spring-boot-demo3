@@ -67,4 +67,9 @@ public class CustomerService {
     public List<Customer> findByName(String name){
         return customerRepository.findAllByFirstNameContainingOrLastNameContaining(name, name);
     }
+
+    public Optional<Customer> findByEmail(String email){
+        return customerRepository.findCustomerByEmailAddress(email);
+    }
+
 }
