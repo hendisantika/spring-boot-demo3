@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,6 +78,17 @@ public class CustomerController {
         try {
             Customer createdCustomer = customerService.create(customer);
             return ResponseEntity.created(new URI("/customer/" + createdCustomer.getId())).body(customer);
+        }catch(Exception ex) {
+            return handleException(ex);
+        }
+    }
+
+    @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateCustomer(@PathVariable(name = "id") String customerId,  @RequestBody Customer customer) {
+        try {
+            customer.setId(Long.valueOf(customerId));
+            Customer updatedCustomer = customerService.update(customer);
+            return ResponseEntity.ok(updatedCustomer);
         }catch(Exception ex) {
             return handleException(ex);
         }
