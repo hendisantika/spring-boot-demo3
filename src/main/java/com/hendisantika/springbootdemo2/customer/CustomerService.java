@@ -46,6 +46,20 @@ public class CustomerService {
             log.error("Customer already exists with emailAddress: {}", customer.getEmailAddress());
             throw new RuntimeException("Customer already exists with same emailAddress");
         }
+    }
 
+    @CachePut(key = "#customer.id")
+    public Customer update(Customer customer) {
+        log.info("Updating a customer with id: {}", customer.getId());
+        Optional<Customer> optionalCustomer = customerRepository.findById(customer.getId());
+        if(optionalCustomer.isEmpty()) {
+            log.error("Unable to update customer by id {}",  customer.getId());
+            throw new RuntimeException("Customer does not exists");
+        }
+        Customer existingCustomer = optionalCustomer.get();
+        existingCustomer.setAddresses(customer.getAddresses());
+        existingCustomer.setFirstName(customer.getFirstName());
+        existingCustomer.setLastName(customer.getLastName());
+        return customerRepository.save(existingCustomer);
     }
 }
