@@ -7,6 +7,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,6 +72,11 @@ public class CustomerService {
 
     public Optional<Customer> findByEmail(String email){
         return customerRepository.findCustomerByEmailAddress(email);
+    }
+
+    //Paging implementation of findAll
+    public Page<Customer> findAll(Pageable pageable) {
+        return customerRepository.findAll(pageable);
     }
 
 }
