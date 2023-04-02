@@ -7,10 +7,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.Optional;
 
 /**
@@ -64,6 +67,16 @@ public class CustomerController {
             PageRequest pageRequest = PageRequest.of(pageNumberLong, pageSizeLong);
             Page page = customerService.findAll(pageRequest);
             return ResponseEntity.ok(page.getContent());
+        }catch(Exception ex) {
+            return handleException(ex);
+        }
+    }
+
+    @PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createCustomer(@RequestBody Customer customer) {
+        try {
+            Customer createdCustomer = customerService.create(customer);
+            return ResponseEntity.created(new URI("/customer/" + createdCustomer.getId())).body(customer);
         }catch(Exception ex) {
             return handleException(ex);
         }
