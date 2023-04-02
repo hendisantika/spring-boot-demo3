@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,5 +62,9 @@ public class CustomerService {
         existingCustomer.setFirstName(customer.getFirstName());
         existingCustomer.setLastName(customer.getLastName());
         return customerRepository.save(existingCustomer);
+    }
+
+    public List<Customer> findByName(String name){
+        return customerRepository.findAllByFirstNameContainingOrLastNameContaining(name, name);
     }
 }
