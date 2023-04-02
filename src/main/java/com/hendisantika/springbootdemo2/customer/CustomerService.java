@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.envers.AuditReader;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -79,4 +81,13 @@ public class CustomerService {
         return customerRepository.findAll(pageable);
     }
 
+    @CacheEvict
+    public void deleteCustomer(Long customerId) {
+        try {
+            customerRepository.deleteById(customerId);
+        } catch (EmptyResultDataAccessException e) {
+            log.error("Unable to delete customer by id {}", customerId);
+            throw new RuntimeException("Customer does not exists");
+        }
+    }
 }
