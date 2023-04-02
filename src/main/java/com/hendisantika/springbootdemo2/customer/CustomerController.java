@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -94,6 +95,18 @@ public class CustomerController {
         try {
             customerService.deleteCustomer(Long.valueOf(customerId));
             return ResponseEntity.noContent().build();
+        }catch(Exception ex) {
+            return handleException(ex);
+        }
+    }
+
+    @GetMapping(path = "/{id}/revisions", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getRevisions(@PathVariable(name = "id") String customerId,
+                                          @RequestParam(value = "fetchChanges", required = false) boolean fetchChanges) {
+        try {
+            List results = customerService.getRevisions(Long.valueOf(customerId), fetchChanges);
+            return ResponseEntity.ok(results);
+
         }catch(Exception ex) {
             return handleException(ex);
         }
