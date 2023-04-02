@@ -1,6 +1,10 @@
 package com.hendisantika.springbootdemo2.customer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,4 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerController {
 
     private final CustomerService customerService;
+
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getCustomerDetail(@PathVariable(name = "id") String customerId) {
+        try {
+            Long customerIdLong = Long.valueOf(customerId);
+            Customer customer = customerService.getCustomerById(customerIdLong)
+                    .orElseThrow(()->new RuntimeException("Customer does not exists"));
+            return ResponseEntity.ok(customer);
+        }catch(Exception ex) {
+            return handleException(ex);
+        }
+    }
 }
