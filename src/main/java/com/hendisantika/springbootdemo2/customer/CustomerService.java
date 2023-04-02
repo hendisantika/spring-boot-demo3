@@ -3,6 +3,8 @@ package com.hendisantika.springbootdemo2.customer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -89,5 +91,20 @@ public class CustomerService {
             log.error("Unable to delete customer by id {}", customerId);
             throw new RuntimeException("Customer does not exists");
         }
+    }
+
+    public List<?> getRevisions(Long id, boolean fetchChanges) {
+        AuditQuery auditQuery = null;
+
+        if(fetchChanges) {
+            auditQuery = auditReader.createQuery()
+                    .forRevisionsOfEntityWithChanges(Customer.class, true);
+        }
+        else {
+            auditQuery = auditReader.createQuery()
+                    .forRevisionsOfEntity(Customer.class, true);
+        }
+        auditQuery.add(AuditEntity.id().eq(id));
+        return auditQuery.getResultList();
     }
 }
