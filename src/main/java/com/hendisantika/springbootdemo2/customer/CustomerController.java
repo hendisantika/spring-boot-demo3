@@ -1,6 +1,8 @@
 package com.hendisantika.springbootdemo2.customer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +48,22 @@ public class CustomerController {
         try {
             Optional<Customer> customer = customerService.findByEmail(emailAddress);
             return ResponseEntity.ok(customer);
+        }catch(Exception ex) {
+            return handleException(ex);
+        }
+    }
+
+    @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllCustomers(
+            @RequestParam("pageNum") String pageNumber,
+            @RequestParam("pageSize") String pageSize) {
+        try {
+            Integer pageNumberLong = Integer.valueOf(pageNumber);
+            Integer pageSizeLong = Integer.valueOf(pageSize);
+            //Create a new paginated search request.
+            PageRequest pageRequest = PageRequest.of(pageNumberLong, pageSizeLong);
+            Page page = customerService.findAll(pageRequest);
+            return ResponseEntity.ok(page.getContent());
         }catch(Exception ex) {
             return handleException(ex);
         }
