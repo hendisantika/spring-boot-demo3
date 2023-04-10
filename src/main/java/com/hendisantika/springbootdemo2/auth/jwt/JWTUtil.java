@@ -1,10 +1,14 @@
 package com.hendisantika.springbootdemo2.auth.jwt;
 
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,4 +37,12 @@ public class JWTUtil {
     private long timeToLiveInSeconds;
 
     private SecretKey secretKey;
+
+    private static final String CLAIM_FIRST_NAME_KEY = "FirstName";
+    private static final String CLAIM_LAST_NAME_KEY = "LastName";
+
+    @PostConstruct
+    public void setUpSecretKey() {
+        secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 }
