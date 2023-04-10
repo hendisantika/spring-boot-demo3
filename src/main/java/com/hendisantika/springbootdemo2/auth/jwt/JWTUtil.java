@@ -1,5 +1,7 @@
 package com.hendisantika.springbootdemo2.auth.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -62,5 +64,15 @@ public class JWTUtil {
                         .signWith(secretKey)
                         .compact();
         return jwt;
+    }
+
+    public Claims parseJWT(String jwtString) {
+        Jws<Claims> headerClaimsJwt =
+                Jwts.parserBuilder()
+                        .setSigningKey(secretKey)
+                        .build()
+                        .parseClaimsJws(jwtString);
+
+        return headerClaimsJwt.getBody();
     }
 }
