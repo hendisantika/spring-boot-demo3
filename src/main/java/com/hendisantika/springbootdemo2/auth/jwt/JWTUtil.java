@@ -1,5 +1,6 @@
 package com.hendisantika.springbootdemo2.auth.jwt;
 
+import com.hendisantika.springbootdemo2.auth.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +14,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 /**
